@@ -25,33 +25,33 @@ function configure(){
 }
 
 function build(){
-    docker compose --compatibility --project-name "postgresql-barman" build --memory 1g --no-cache;
+    sudo docker-compose --compatibility --project-name "postgresql-barman" build --memory 1g --no-cache;
 }
 
 function up(){
-    docker compose --compatibility --project-name "postgresql-barman" up -d;
+    sudo docker-compose --compatibility --project-name "postgresql-barman" up -d;
 }
 
 function stop(){
-    docker compose --compatibility --project-name "postgresql-barman" stop;
+    sudo docker-compose --compatibility --project-name "postgresql-barman" stop;
 }
 
 function drop(){
-    docker compose --compatibility --project-name "postgresql-barman" down;
+    sudo docker-compose --compatibility --project-name "postgresql-barman" down;
 }
 
 function drop_hard(){
-    docker compose --compatibility --project-name "postgresql-barman" down --remove-orphans --volumes --rmi 'all' && \
+    sudo docker-compose --compatibility --project-name "postgresql-barman" down --remove-orphans --volumes --rmi 'all' && \
     [ -d "./data" ] && sudo rm -rf ./data;
     docker builder prune -f;
 }
 
 function populate(){
-    docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_dep_estoque_db.sql)";
+    sudo docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_dep_estoque_db.sql)";
 }
 
 function seed(){
-    docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_dep_estoque_db_seed.sql)";
+    sudo docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_dep_estoque_db_seed.sql)";
 }
 
 function update(){
@@ -65,8 +65,8 @@ function update(){
 }
 
 function dump(){
-    docker exec postgres-source-db pg_dump -U dbadmin -d 'db' -p 5432 -f /tmp/db.sql;
-    docker cp postgres-source-db:/tmp/db.sql ./data/pgbarman/backups/db.sql;
+    sudo docker exec postgres-source-db pg_dump -U dbadmin -d 'db' -p 5432 -f /tmp/db.sql;
+    sudo docker cp postgres-source-db:/tmp/db.sql ./data/pgbarman/backups/db.sql;
 }
 
 $1
